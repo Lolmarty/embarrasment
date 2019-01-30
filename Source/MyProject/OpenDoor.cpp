@@ -49,14 +49,7 @@ float UOpenDoor::GetTotalMassOnPlate() {
 	TArray<AActor*> OverlappingActors;
 	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
 	for (const auto& actor : OverlappingActors) {
-		for (const auto& component : actor->GetComponents())
-		{
-			UPrimitiveComponent* comp = Cast<UPrimitiveComponent>(component);
-			if (comp)
-			{
-				TotalMass += comp->GetMass();
-			}
-		}
+		TotalMass += actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
 	}
 
 	return TotalMass;

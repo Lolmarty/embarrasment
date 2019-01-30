@@ -30,7 +30,7 @@ public:
 	
 	private:
 		UPROPERTY(EditAnywhere)
-		float Reach = 100.f;
+		float Reach = 150.f;
 		UPhysicsHandleComponent* PhysicsHandleComponent = nullptr;
 		UInputComponent* InputComponent = nullptr;
 
@@ -39,4 +39,6 @@ public:
 		void FindPhysicsHandleComponent();
 		void SetUpInputComponent();
 		const FHitResult GetFirstPhysicsBodyInReach();
+		const FVector GetGrabPoint();
+		const FVector GetPlayerViewpointLocation();
 };

@@ -88,7 +88,8 @@ const FVector UGrabber::GetPlayerViewpointLocation()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+	if (!PhysicsHandleComponent) return;
+
 	if (PhysicsHandleComponent->GetGrabbedComponent()) {
 		FVector LineTraceEnd = GetGrabPoint();
 		PhysicsHandleComponent->SetTargetLocationAndRotation(LineTraceEnd,FRotator::ZeroRotator);
@@ -97,6 +98,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 void UGrabber::Grab()
 {
+	if (!PhysicsHandleComponent) return;
 	UE_LOG(LogTemp, Warning, TEXT("what am i looking at is this the one and only GRABBO?!"));
 	FHitResult Hit = GetFirstPhysicsBodyInReach();
 	if (Hit.GetActor()) {
@@ -108,6 +110,7 @@ void UGrabber::Grab()
 
 void UGrabber::Release()
 {
+	if (!PhysicsHandleComponent) return;
 	UE_LOG(LogTemp, Warning, TEXT("what am i looking at is this the one and only FLEXO?!"));
 	if (PhysicsHandleComponent->GetGrabbedComponent())
 		PhysicsHandleComponent->ReleaseComponent();

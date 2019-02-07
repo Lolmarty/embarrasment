@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,6 +8,9 @@
 #include "Engine/TriggerVolume.h"
 #include "GameFramework/Actor.h"
 #include "OpenDoor.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE (FOnOpenRequest);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE (FOnCloseRequest);
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -28,23 +32,16 @@ public:
 
 	float GetTotalMassOnPlate();
 
-	void OpenDoorAction();
-	void CloseDoorAction();
-
 private:
-	UPROPERTY(VisibleAnywhere)
-	float OpenAngle = 90.f;
-	
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate;
 
-	AActor* Owner;
-
-	UPROPERTY(EditAnywhere)
-	float DoorCloseDelay = 1.f;
-
 	UPROPERTY(EditAnywhere)
 	float TriggerMass= 100.f;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnOpenRequest OnOpenRequest;
 
-	float LastDoorOpenTime;
+	UPROPERTY(BlueprintAssignable)
+	FOnCloseRequest OnCloseRequest;
 };

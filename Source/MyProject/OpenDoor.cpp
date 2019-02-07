@@ -22,7 +22,11 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	// ...
-	Owner = GetOwner();
+	if(!PressurePlate)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Pressure plate component was not assigned to '%s'."), *GetOwner()->GetName());
+	}
+
 }
 
 
@@ -32,47 +36,23 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if (GetTotalMassOnPlate() > TriggerMass)
-	{
-		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
-		OpenDoorAction();
-	}
-
-	if (GetWorld()->GetTimeSeconds() - LastDoorOpenTime > DoorCloseDelay)
-		CloseDoorAction();
-		
-	// ...
+		OnOpenRequest.Broadcast();
+	else
+		OnCloseRequest.Broadcast();
 }
 
 float UOpenDoor::GetTotalMassOnPlate() {
+	if (!PressurePlate) return -1;
 	float TotalMass = 0.f;
 
 	TArray<AActor*> OverlappingActors;
 	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
 	for (const auto* actor : OverlappingActors) {
 		TotalMass += actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
-		UE_LOG(LogTemp, Warning, TEXT("%s is on the pressure plate."), *actor->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("%s is on the pressure plate."), *actor->GetName());
 	}
 
 	return TotalMass;
 }
 
-void UOpenDoor::OpenDoorAction()
-{
-	auto rotation = Owner->GetActorRotation();
-	if (rotation.Yaw <= OpenAngle)
-	{
-		rotation.Add(0.f, 1.f, 0.f);
-		Owner->SetActorRotation(rotation);
-	}
-}
-
-void UOpenDoor::CloseDoorAction()
-{
-	auto rotation = Owner->GetActorRotation();
-	if (rotation.Yaw >= 0)
-	{
-		rotation.Add(0.f, -1.f, 0.f);
-		Owner->SetActorRotation(rotation);
-	}
-}
 

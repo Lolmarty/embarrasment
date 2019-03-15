@@ -7,6 +7,8 @@
 #include "Engine/TriggerVolume.h"
 #include "LightSwitch.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLightsOnRequest);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLightsOffRequest);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MYPROJECT_API ULightSwitch : public UActorComponent
@@ -24,13 +26,16 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	void LightSwitchAction();
-
 		
 private:
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnLightsOnRequest OnLightsOnRequest;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnLightsOffRequest OnLightsOffRequest;
 
 private:
 		AActor* ActorThatOpens;

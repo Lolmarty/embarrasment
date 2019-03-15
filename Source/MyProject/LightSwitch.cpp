@@ -23,6 +23,8 @@ ULightSwitch::ULightSwitch()
 void ULightSwitch::BeginPlay()
 {
 	Super::BeginPlay();
+	if(!PressurePlate)
+		UE_LOG(LogTemp, Warning, TEXT("Pressure plate component was not assigned to '%s'."), *GetOwner()->GetName());
 
 	// ...
 	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
@@ -34,15 +36,10 @@ void ULightSwitch::BeginPlay()
 void ULightSwitch::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (!PressurePlate)
+		return;
 	if(PressurePlate->IsOverlappingActor(ActorThatOpens))
-		LightSwitchAction();
+		OnLightsOffRequest.Broadcast();
+	else
+		OnLightsOnRequest.Broadcast();
 }
-
-void ULightSwitch::LightSwitchAction()
-{
-	auto light = GetOwner()->FindComponentByClass<UPointLightComponent>();
-	auto intent = light->Intensity;
-	light->SetIntensity(intent * .9f);
-	// ...
-}
-

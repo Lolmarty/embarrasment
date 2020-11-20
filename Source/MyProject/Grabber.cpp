@@ -87,7 +87,7 @@ const FVector UGrabber::GetPlayerViewpointLocation()
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);	
 	if (!PhysicsHandleComponent) return;
 
 	if (PhysicsHandleComponent->GetGrabbedComponent()) {
